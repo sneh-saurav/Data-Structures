@@ -1,0 +1,112 @@
+package main
+
+import "fmt"
+
+// ArraySize is the size of HashTable array
+const ArraySize = 7
+
+// Structure for Hash table : it will hold an array
+type HashTable struct {
+	array [ArraySize]*bucket
+}
+
+// Structure for Bucket : Bucket is a linked List in each slot of the array
+type bucket struct {
+	head *bucketNode
+}
+
+// Structure for bucketNode : BucketNode is a linked list node that holds a key value amd the address of next node
+type bucketNode struct {
+	key  string
+	next *bucketNode
+}
+
+// Insert : It will take a key and Add it to the hash table array
+func (h *HashTable) Insert(key string) {
+	index := hash(key)
+	h.array[index].insert(key)
+}
+
+// Search : It will take a key and if its found it in the hash table it returns true, else it returns false
+func (h *HashTable) Search(key string) bool {
+	index := hash(key)
+	return h.array[index].search(key)
+}
+
+// Delete : It will take a key and delete it from the array
+func (h *HashTable) Delete(key string) {
+	index := hash(key)
+	return h.array[index].delete(key)
+	
+
+// insert : it'll take a key, create a node with the key and insert the node with the bucket
+func(b *bucket) insert(k string){
+	if !b.search(k){
+	newNode := &bucketNode(key : k)
+	newNode.next = b.head
+	b.head = newNode
+	}else {
+		fmt.Println(k,"Already Exists")
+	}
+}
+
+// search : It will take a key and if its found it in the bucket it returns true, else it returns false
+func (b *bucket) search(k string) bool {
+	currentNode := b.head
+	for currentNode != nil{
+		if currentNode.key == k{
+			return true
+		}
+		currentNode = currentNode.next
+	}
+	return false
+}
+
+// delete : It'll take a key and delete the node from the bucket
+func (b *bucket)delete(k string){
+	if b.head.key == k{
+		b.head = b.head.next
+		return
+	}
+	previousNode  := b.head
+	for previousNode.next != nil{
+		if previousNode.next.key == k{
+			// delete
+			previousNode.next = previousNode.next.next
+		}
+		previousNode = previousNode.next
+	}
+}
+
+// hash
+func hash(key string) int {
+	sum := 0
+	for _, v := range key {
+		sum += int(v)
+	}
+	return sum % ArraySize
+}
+
+// Init : it will create a bucket in each slot of hash table
+func Init() *HashTable {
+	result := &HashTable{}
+	for i := range result.array {
+		result.array[i] = &bucket{}
+	}
+	return result
+}
+
+func main() {
+	hashTable := Init()
+	list := []string{
+		"SNEH",
+		"ERIC",
+		"SAURAV",
+		"TOKEN"
+	}
+	for _, v:= range list{
+		hashTable.Insert(v)
+	}
+	hashTable.Delete("SAURAV")
+	fmt.Println(hashTable.Search("SAURAV"))
+}

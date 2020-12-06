@@ -1,0 +1,30 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Book struct {
+	Title  string `json : "title"`
+	Author Author `json : "author"`
+}
+
+type Author struct {
+	Name      string `json : "name"`
+	Age       int    `json : "age"`
+	Developer bool   `json : "is_developer"`
+}
+
+func main() {
+	author := Author{Name: "SAURAV", Age: 23, Developer: true}
+	book := Book{Title: "Learning Json", Author: author}
+	fmt.Println(book)
+
+	byteArray, err := json.MarshalIndent(book, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Json Byte Code : ", byteArray)
+	fmt.Println("Json String Code :", string(byteArray))
+}
